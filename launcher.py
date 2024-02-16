@@ -35,7 +35,12 @@ state = {
 
 badger_os.state_load("launcher", state)
 
-examples = [x[:-3] for x in os.listdir("/examples") if x.endswith(".py")]
+default_examples = ["fonts", "image", "info"]
+examples = [x[:-3] for x in os.listdir(APP_DIR) if x.endswith(".py")]
+for opt in default_examples:
+    if opt in examples:
+        examples.remove(opt)
+        examples += [opt]
 
 # Approximate center lines for buttons A, B and C
 centers = (41, 147, 253)
@@ -90,7 +95,7 @@ def render():
         x = centers[i]
         label = examples[i + (state["page"] * 3)]
         icon_label = label.replace("_", "-")
-        icon = f"{APP_DIR}/icon-{icon_label}.jpg"
+        icon = f"{APP_DIR}/icons/icon-{icon_label}.jpg"
         label = label.replace("_", " ")
         jpeg.open_file(icon)
         jpeg.decode(x - 26, 30)
