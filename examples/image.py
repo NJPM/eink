@@ -31,6 +31,7 @@ state = {
 
 
 def show_image(n):
+    display.clear()
     file = IMAGES[n]
     name = file.split(".")[0]
     jpeg.open_file("/images/{}".format(file))
