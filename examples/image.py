@@ -18,7 +18,7 @@ jpeg = jpegdec.JPEG(display.display)
 
 # Load images
 try:
-    IMAGES = [f for f in os.listdir("/images") if f.endswith(".jpg")]
+    IMAGES = [f for f in os.listdir("/images/full") if f.endswith(".jpg")]
     TOTAL_IMAGES = len(IMAGES)
 except OSError:
     pass
@@ -34,7 +34,7 @@ def show_image(n):
     display.clear()
     file = IMAGES[n]
     name = file.split(".")[0]
-    jpeg.open_file("/images/{}".format(file))
+    jpeg.open_file("/images/full/{}".format(file))
     jpeg.decode()
 
     if state["show_info"]:
@@ -59,7 +59,7 @@ def show_image(n):
 
 
 if TOTAL_IMAGES == 0:
-    raise RuntimeError("To run this demo, create an /images directory on your device and upload some 1bit 296x128 pixel images.")
+    raise RuntimeError("To run this demo, create an /images/full directory on your device and upload some 1bit 296x128 pixel images.")
 
 
 badger_os.state_load("image", state)
