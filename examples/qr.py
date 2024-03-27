@@ -22,7 +22,7 @@ DETAIL_SPACING = 10
 
 TITLE = "puppy"
 NAME = "hroar"
-DETAIL = "hroar.uk"
+DETAIL = "hroar.dog"
 IMAGE = "images/qr.jpg"
 
 # ------------------------------

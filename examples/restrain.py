@@ -6,22 +6,25 @@ import jpegdec
 WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
 
-IMAGE_WIDTH = 104
-
-TITLE_HEIGHT = 30
-NAME_HEIGHT = HEIGHT - TITLE_HEIGHT - 2
-TEXT_WIDTH = WIDTH - (IMAGE_WIDTH * 2) - 1
+IMAGE_WIDTH = 49
 
 TITLE_TEXT_SIZE = 0.9
+DETAIL_TEXT_SIZE = 0.6
 
-LEFT_PADDING = 5
+TITLE_HEIGHT = round(30*TITLE_TEXT_SIZE)
+TEXT_WIDTH = WIDTH - (IMAGE_WIDTH) - 1
+
+LEFT_PADDING = 6
 NAME_PADDING = 20
 DETAIL_SPACING = 10
 
-TITLE = "hroar"
-NAME = "Caution! This pup is not able to see well"#, if at all. Please be careful."
-IMAGE_NSFK = "images/blind.jpg"
-IMAGE_THC = "images/blindfold.jpg"
+TITLE = "PATIENT, HROAR"
+DETAIL_1 = "DR. SCHMITT"
+DETAIL_2 = "DOB:   2024-04-06"
+DETAIL_3 = "Hilton Sanitarium Rm #"
+DETAIL_4 = "KEEP MUZZLED"
+DETAIL_5 = "KEEP RESTRAINED"
+IMAGE = "images/barcode.jpg"
 
 # ------------------------------
 #      Utility functions
@@ -49,39 +52,27 @@ def draw_badge():
     display.clear()
 
     # Draw left badge image
-    jpeg.open_file(IMAGE_THC)
+    jpeg.open_file(IMAGE)
     jpeg.decode(0, 0)
-    # # Draw right badge image
-    jpeg.open_file(IMAGE_NSFK)
-    jpeg.decode((WIDTH - IMAGE_WIDTH) + 1, 0)
 
-    # Draw a border around the images
-    display.set_pen(0)
-    # Left image
-    display.line(0, 0, IMAGE_WIDTH + 1, 0)
-    display.line(0, 0, 0, HEIGHT - 1)
-    display.line(0, HEIGHT - 1, IMAGE_WIDTH + 1, HEIGHT - 1)
-    display.line(IMAGE_WIDTH + 1, 0, IMAGE_WIDTH + 1, HEIGHT - 1)
-    # Right image
-    display.line(WIDTH - IMAGE_WIDTH, 0, WIDTH - 1, 0)
-    display.line(WIDTH - IMAGE_WIDTH, 0, WIDTH - IMAGE_WIDTH, HEIGHT - 1)
-    display.line(WIDTH - IMAGE_WIDTH, HEIGHT - 1, WIDTH - 1, HEIGHT - 1)
-    display.line(WIDTH - 1, 0, WIDTH - 1, HEIGHT - 1)
+    # Draw a white background
+    display.set_pen(15)
+    display.rectangle(IMAGE_WIDTH, 0, TEXT_WIDTH + 1, HEIGHT)
 
     # Draw the TITLE
-    display.set_pen(15)  # Change this to 0 if a white background is used
+    display.set_pen(0)
+    display.set_thickness(3)
     display.set_font("sans")
     display.text(title, IMAGE_WIDTH + LEFT_PADDING + 1, TITLE_HEIGHT // 2, WIDTH, TITLE_TEXT_SIZE)
 
-    # Draw a white background behind the name
-    display.set_pen(15)
-    display.rectangle(IMAGE_WIDTH + 1, TITLE_HEIGHT + 1, TEXT_WIDTH, NAME_HEIGHT)
-
     # Draw the name, scaling it based on the available width
     display.set_pen(0)
-    display.set_font("bitmap8")
-    name_size = 2
-    display.text(NAME, IMAGE_WIDTH + LEFT_PADDING, (TITLE_HEIGHT) + LEFT_PADDING, wordwrap=((WIDTH - (IMAGE_WIDTH * 2)) - (LEFT_PADDING * 2)), scale=name_size)
+    display.set_thickness(2)
+    display.set_font("sans")
+    line = 0
+    for detail in [DETAIL_1, DETAIL_2, DETAIL_3, DETAIL_4, DETAIL_5]:
+        display.text(detail, IMAGE_WIDTH + LEFT_PADDING + 2, TITLE_HEIGHT + LEFT_PADDING + 2 + line*(round((22*DETAIL_TEXT_SIZE)) + LEFT_PADDING), scale=DETAIL_TEXT_SIZE)
+        line += 1
 
     display.update()
 

@@ -10,7 +10,7 @@ IMAGE_WIDTH = 104
 
 TITLE_HEIGHT = 30
 NAME_HEIGHT = HEIGHT - TITLE_HEIGHT - 2
-TEXT_WIDTH = WIDTH - (IMAGE_WIDTH * 2) - 1
+TEXT_WIDTH = WIDTH - (IMAGE_WIDTH) - 1
 
 TITLE_TEXT_SIZE = 0.9
 
@@ -19,9 +19,8 @@ NAME_PADDING = 20
 DETAIL_SPACING = 10
 
 TITLE = "hroar"
-NAME = "This puppy has not been analyzed or approved by the FDA. There is limited information on the side effects of using this puppy. KEEP THIS PUPPY AWAY FROM KIDS."
-IMAGE_NSFK = "images/nsfk.jpg"
-IMAGE_THC = "images/containsthc.jpg"
+NAME = "WARNING. This puppy contains THC. This puppy has not been analyzed or approved by the FDA. There is limited information on the side effects of using this puppy, and there may be associated health risks. Marijuana use during pregnancy and breastfeeding may pose potential harms. It is against the law to drive or operate machinery when under the influence of this puppy. KEEP THIS PUPPY AWAY FROM CHILDREN."
+IMAGE_THC = "images/thc.jpg"
 
 # ------------------------------
 #      Utility functions
@@ -51,9 +50,6 @@ def draw_badge():
     # Draw left badge image
     jpeg.open_file(IMAGE_THC)
     jpeg.decode(0, 0)
-    # # Draw right badge image
-    jpeg.open_file(IMAGE_NSFK)
-    jpeg.decode((WIDTH - IMAGE_WIDTH) + 1, 0)
 
     # Draw a border around the images
     display.set_pen(0)
@@ -62,11 +58,6 @@ def draw_badge():
     display.line(0, 0, 0, HEIGHT - 1)
     display.line(0, HEIGHT - 1, IMAGE_WIDTH + 1, HEIGHT - 1)
     display.line(IMAGE_WIDTH + 1, 0, IMAGE_WIDTH + 1, HEIGHT - 1)
-    # Right image
-    display.line(WIDTH - IMAGE_WIDTH, 0, WIDTH - 1, 0)
-    display.line(WIDTH - IMAGE_WIDTH, 0, WIDTH - IMAGE_WIDTH, HEIGHT - 1)
-    display.line(WIDTH - IMAGE_WIDTH, HEIGHT - 1, WIDTH - 1, HEIGHT - 1)
-    display.line(WIDTH - 1, 0, WIDTH - 1, HEIGHT - 1)
 
     # Draw the TITLE
     display.set_pen(15)  # Change this to 0 if a white background is used
@@ -81,7 +72,7 @@ def draw_badge():
     display.set_pen(0)
     display.set_font("bitmap6")
     name_size = 0.4  # A sensible starting scale
-    display.text(NAME, IMAGE_WIDTH + LEFT_PADDING, (TITLE_HEIGHT) + LEFT_PADDING, wordwrap=((WIDTH - (IMAGE_WIDTH * 2)) - (LEFT_PADDING * 2)), scale=name_size)
+    display.text(NAME, IMAGE_WIDTH + LEFT_PADDING, (TITLE_HEIGHT) + LEFT_PADDING, wordwrap=((WIDTH - (IMAGE_WIDTH)) - (LEFT_PADDING * 2)), scale=name_size)
 
     display.update()
 

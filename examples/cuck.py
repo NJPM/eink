@@ -20,10 +20,10 @@ LEFT_PADDING = 5
 NAME_PADDING = 20
 DETAIL_SPACING = 10
 
-TITLE = "locked in suit"
+TITLE = "cuckpuppy"
 NAME = "hroar"
-DETAIL = "please don't free me"
-IMAGE = "images/locked.jpg"
+DETAIL = "will clean you up after"
+IMAGE = "images/cuck.jpg"
 
 # ------------------------------
 #      Utility functions
@@ -63,8 +63,8 @@ def draw_badge():
 
     # Draw the TITLE
     display.set_pen(15)  # Change this to 0 if a white background is used
-    display.set_font("serif_italic")
-    display.text(title, LEFT_PADDING - 2, (TITLE_HEIGHT // 2) + 1, WIDTH, TITLE_TEXT_SIZE)
+    display.set_font("sans")
+    display.text(title, LEFT_PADDING + 25, (TITLE_HEIGHT // 2) + 1, WIDTH, TITLE_TEXT_SIZE)
 
     # Draw a white background behind the name
     display.set_pen(15)
@@ -72,7 +72,7 @@ def draw_badge():
 
     # Draw the name, scaling it based on the available width
     display.set_pen(0)
-    display.set_font("sans")
+    display.set_font("serif_italic")
     name_size = 2.0  # A sensible starting scale
     while True:
         name_length = display.measure_text(NAME, name_size)
@@ -88,7 +88,7 @@ def draw_badge():
 
     # Draw the detail's title and text
     display.set_pen(0)
-    display.set_font("serif_italic")
+    display.set_font("sans")
     display.text(detail, LEFT_PADDING,  (HEIGHT - (DETAILS_HEIGHT // 2)) - 1, WIDTH, DETAILS_TEXT_SIZE)
 
     display.update()
