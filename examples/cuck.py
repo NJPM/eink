@@ -14,6 +14,7 @@ NAME_HEIGHT = HEIGHT - TITLE_HEIGHT - (DETAILS_HEIGHT * 2) - 2
 TEXT_WIDTH = WIDTH - IMAGE_WIDTH - 1
 
 TITLE_TEXT_SIZE = 0.8
+LINE_TEXT_SIZE = 0.55
 DETAILS_TEXT_SIZE = 0.5
 
 LEFT_PADDING = 5
@@ -22,7 +23,10 @@ DETAIL_SPACING = 10
 
 TITLE = "cuckpuppy"
 NAME = "hroar"
-DETAIL = "will clean you up after"
+LINE_1 = "Let me watch"
+LINE_2 = "Don't let me join"
+LINE_3 = "I'll clean you up after"
+DETAIL = "cuck.dog"
 IMAGE = "images/cuck.jpg"
 
 # ------------------------------
@@ -73,14 +77,16 @@ def draw_badge():
     # Draw the name, scaling it based on the available width
     display.set_pen(0)
     display.set_font("serif_italic")
-    name_size = 2.0  # A sensible starting scale
-    while True:
-        name_length = display.measure_text(NAME, name_size)
-        if name_length >= (TEXT_WIDTH - NAME_PADDING) and name_size >= 0.1:
-            name_size -= 0.01
-        else:
-            display.text(NAME, (TEXT_WIDTH - name_length) // 2, (NAME_HEIGHT // 2) + TITLE_HEIGHT + (DETAILS_HEIGHT) // 2, WIDTH, name_size)
-            break
+    name_size = 1.0  # A sensible starting scale
+    name_length = display.measure_text(NAME, name_size)
+    display.text(NAME, (TEXT_WIDTH - name_length) // 2, TITLE_HEIGHT + LEFT_PADDING + (DETAILS_HEIGHT) // 2, WIDTH, name_size)
+
+    # Draw lines
+    display.set_font("sans")
+    line_no = 0
+    for line in [LINE_1, LINE_2, LINE_3]:
+        display.text(line, LEFT_PADDING + 2, TITLE_HEIGHT + 35 + line_no*(round((20*LINE_TEXT_SIZE)) + LEFT_PADDING), scale=LINE_TEXT_SIZE)
+        line_no += 1
 
     # Draw a white backgrounds behind the details
     display.set_pen(15)
@@ -89,7 +95,8 @@ def draw_badge():
     # Draw the detail's title and text
     display.set_pen(0)
     display.set_font("sans")
-    display.text(detail, LEFT_PADDING,  (HEIGHT - (DETAILS_HEIGHT // 2)) - 1, WIDTH, DETAILS_TEXT_SIZE)
+    detail_length = display.measure_text(detail, name_size)
+    display.text(detail, (detail_length // 2),  (HEIGHT - (DETAILS_HEIGHT // 2)) - 1, WIDTH, DETAILS_TEXT_SIZE)
 
     display.update()
 
