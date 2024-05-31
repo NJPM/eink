@@ -1,6 +1,17 @@
 import badger2040
+import badger_os
 import jpegdec
 
+
+# State management
+state = {
+    "label": True,
+    "thc_count": 0
+}
+
+badger_os.state_load("thc", state)
+
+changed = True
 
 # Global Constants
 WIDTH = badger2040.WIDTH
@@ -19,7 +30,7 @@ NAME_PADDING = 20
 DETAIL_SPACING = 10
 
 TITLE = "hroar"
-NAME = "WARNING. This puppy contains THC. This puppy has not been analyzed or approved by the FDA. There is limited information on the side effects of using this puppy, and there may be associated health risks. Marijuana use during pregnancy and breastfeeding may pose potential harms. It is against the law to drive or operate machinery when under the influence of this puppy. KEEP THIS PUPPY AWAY FROM CHILDREN."
+LABEL = "WARNING. This puppy contains THC. This puppy has not been analyzed or approved by the FDA. There is limited information on the side effects of using this puppy, and there may be associated health risks. Marijuana use during pregnancy and breastfeeding may pose potential harms. It is against the law to drive or operate machinery when under the influence of this puppy. KEEP THIS PUPPY AWAY FROM CHILDREN."
 IMAGE_THC = "images/thc.jpg"
 
 # ------------------------------
@@ -68,13 +79,35 @@ def draw_badge():
     display.set_pen(15)
     display.rectangle(IMAGE_WIDTH + 1, TITLE_HEIGHT + 1, TEXT_WIDTH, NAME_HEIGHT)
 
-    # Draw the name, scaling it based on the available width
+    # Draw the main text
     display.set_pen(0)
-    display.set_font("bitmap6")
-    name_size = 0.4  # A sensible starting scale
-    display.text(NAME, IMAGE_WIDTH + LEFT_PADDING, (TITLE_HEIGHT) + LEFT_PADDING, wordwrap=((WIDTH - (IMAGE_WIDTH)) - (LEFT_PADDING * 2)), scale=name_size)
+    if state["label"]:
+        display.set_font("bitmap6")
+        name_size = 0.4
+        display.text(LABEL, IMAGE_WIDTH + LEFT_PADDING, (TITLE_HEIGHT) + LEFT_PADDING, wordwrap=((WIDTH - (IMAGE_WIDTH)) - (LEFT_PADDING * 2)), scale=name_size)
+    else:
+        display.set_font("bitmap8")
+        name_size = 2
+        COUNT = f"WARNING.\nThis puppy contains {state['thc_count']}mg of THC."
+        display.text(COUNT, IMAGE_WIDTH + LEFT_PADDING, (TITLE_HEIGHT) + LEFT_PADDING, wordwrap=((WIDTH - (IMAGE_WIDTH)) - (LEFT_PADDING * 2)), scale=name_size)
 
     display.update()
+
+def button_switch():
+    global changed
+    state["label"] = not state["label"]
+    changed = True
+
+def button_count(pin):
+    global changed
+    if pin == badger2040.BUTTON_UP:
+        if state["thc_count"] < 210:
+            state["thc_count"] += 10
+            changed = True
+    if pin == badger2040.BUTTON_DOWN:
+        if state["thc_count"] > 0:
+            state["thc_count"] -= 10
+            changed = True
 
 
 # ------------------------------
@@ -96,9 +129,18 @@ title = truncatestring(TITLE, TITLE_TEXT_SIZE, TEXT_WIDTH)
 #       Main program
 # ------------------------------
 
-draw_badge()
-
 while True:
+    if display.pressed(badger2040.BUTTON_C):
+        button_switch()
+    if display.pressed(badger2040.BUTTON_UP):
+        button_count(badger2040.BUTTON_UP)
+    if display.pressed(badger2040.BUTTON_DOWN):
+        button_count(badger2040.BUTTON_DOWN)
+
+    if changed:
+        draw_badge()
+        badger_os.state_save("thc", state)
+        changed = False
     # Sometimes a button press or hold will keep the system powered *through* HALT, so latch the power back on.
     display.keepalive()
 
