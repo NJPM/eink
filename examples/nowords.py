@@ -6,25 +6,23 @@ import jpegdec
 WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
 
-IMAGE_WIDTH = 49
+IMAGE_WIDTH = 0
 
-TITLE_TEXT_SIZE = 0.9
-DETAIL_TEXT_SIZE = 0.6
+TITLE_HEIGHT = 15
+DETAILS_HEIGHT = 65
+NAME_HEIGHT = HEIGHT - TITLE_HEIGHT - DETAILS_HEIGHT - 2
+TEXT_WIDTH = WIDTH - IMAGE_WIDTH - 1
 
-TITLE_HEIGHT = round(30*TITLE_TEXT_SIZE)
-TEXT_WIDTH = WIDTH - (IMAGE_WIDTH) - 1
+TITLE_TEXT_SIZE = 2
+DETAILS_TEXT_SIZE = 6
 
-LEFT_PADDING = 6
+LEFT_PADDING = 5
 NAME_PADDING = 20
 DETAIL_SPACING = 10
 
-TITLE = "PATIENT, HROAR"
-DETAIL_1 = "DR. SCHMITT"
-DETAIL_2 = "DOB:  2024-04-06"
-DETAIL_3 = "Hilton Sanitarium"
-DETAIL_4 = "KEEP RESTRAINED AND"
-DETAIL_5 = "MUZZLED AT ALL TIMES"
-IMAGE = "images/barcode.jpg"
+TITLE = "THIS DOG IS"
+DETAIL = "NONVERBAL"
+NAME = "hroar"
 
 # ------------------------------
 #      Utility functions
@@ -48,31 +46,41 @@ def truncatestring(text, text_size, width):
 
 # Draw the badge, including user text
 def draw_badge():
+    # Draw a background behind the name
     display.set_pen(0)
     display.clear()
 
-    # Draw left badge image
-    jpeg.open_file(IMAGE)
-    jpeg.decode(0, 0)
-
-    # Draw a white background
     display.set_pen(15)
-    display.rectangle(IMAGE_WIDTH, 0, TEXT_WIDTH + 1, HEIGHT)
-
-    # Draw the TITLE
-    display.set_pen(0)
-    display.set_thickness(3)
-    display.set_font("sans")
-    display.text(title, IMAGE_WIDTH + LEFT_PADDING + 1, TITLE_HEIGHT // 2, WIDTH, TITLE_TEXT_SIZE)
+    display.rectangle(1, 1, TEXT_WIDTH, NAME_HEIGHT + 1)
 
     # Draw the name, scaling it based on the available width
     display.set_pen(0)
-    display.set_thickness(2)
     display.set_font("sans")
-    line = 0
-    for detail in [DETAIL_1, DETAIL_2, DETAIL_3, DETAIL_4, DETAIL_5]:
-        display.text(detail, IMAGE_WIDTH + LEFT_PADDING + 2, TITLE_HEIGHT + LEFT_PADDING + 2 + line*(round((22*DETAIL_TEXT_SIZE)) + LEFT_PADDING), scale=DETAIL_TEXT_SIZE)
-        line += 1
+    name_size = 2.0  # A sensible starting scale
+    while True:
+        name_length = display.measure_text(NAME, name_size)
+        if name_length >= (TEXT_WIDTH - NAME_PADDING) and name_size >= 0.1:
+            name_size -= 0.01
+        else:
+            display.text(NAME, (TEXT_WIDTH - name_length) // 2, (NAME_HEIGHT // 2) + 3, WIDTH, name_size)
+            break
+
+    # display.set_pen(15)
+
+    # Draw the TITLE
+    display.set_pen(15)  # Change this to 0 if a white background is used
+    display.set_font("bitmap8")
+    title_length = display.measure_text(title, TITLE_TEXT_SIZE)
+    display.text(title, (WIDTH - title_length) // 2, (TITLE_HEIGHT // 10) + NAME_HEIGHT + 5, WIDTH, TITLE_TEXT_SIZE)
+
+    # Draw a white backgrounds behind the details
+    # display.set_pen(15)
+    # display.rectangle(1, TITLE_HEIGHT, TEXT_WIDTH, DETAILS_HEIGHT - 1)
+
+    # Draw the first detail's title and text
+    # display.set_pen(0)
+    detail_length = display.measure_text(detail, DETAILS_TEXT_SIZE)
+    display.text(detail, ((WIDTH - detail_length) // 2) + 5, TITLE_HEIGHT + NAME_HEIGHT + (DETAILS_HEIGHT // 5), WIDTH, DETAILS_TEXT_SIZE)
 
     display.update()
 
@@ -91,6 +99,8 @@ jpeg = jpegdec.JPEG(display.display)
 
 # Truncate all of the text (except for the name as that is scaled)
 title = truncatestring(TITLE, TITLE_TEXT_SIZE, TEXT_WIDTH)
+
+detail = truncatestring(DETAIL, DETAILS_TEXT_SIZE, TEXT_WIDTH + 25)
 
 # ------------------------------
 #       Main program
