@@ -25,24 +25,7 @@ TITLE = "hroar's hidden gear"
 # State management
 state = {
     'current': 0,
-    'items': [
-        # head
-        "Gag",
-        "Hypno",
-        "Blindfold",
-        "Collar",
-        # body
-        "Locks",
-        "Clamps",
-        "Mitts",
-        "Rubber",
-        # belt
-        "Cage",
-        "Padding",
-        "Plug",
-        # other
-        "Other...",
-    ],
+    'items': [],
     'checklist': [
         "[ ]",
         "[ ]",
@@ -60,6 +43,25 @@ state = {
 }
 
 badger_os.state_load("checklist", state)
+
+state["items"] = [
+    # head
+    "Gag",
+    "Hypno",
+    "Collar",
+    "Bag",
+    # body
+    "Locks",
+    "Clamps",
+    "Mitts",
+    "Rubber",
+    # belt
+    "Cage",
+    "Padding",
+    "Plug",
+    # other
+    '"Treats"',  # Drugs
+]
 
 changed = True
 
@@ -111,7 +113,7 @@ def draw_badge():
         n += 1
         y += NAME_HEIGHT // 4
         if n % 4 == 0:
-            x += (WIDTH // 3) + 2
+            x += (WIDTH // 3)
             y = LIST_TOP_PADDING
 
     display.update()
