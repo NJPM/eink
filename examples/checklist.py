@@ -54,7 +54,7 @@ state["items"] = [
     "Locks",
     "Clamps",
     "Mitts",
-    "Rubber",
+    "Shiny",
     # belt
     "Cage",
     "Padding",
